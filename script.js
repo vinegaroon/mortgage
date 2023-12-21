@@ -11,12 +11,14 @@ function calculateLoanPeriod(amount, rate, repayment, daysPerPayment = 14) {
   let d = 0;
   let remaining = amount;
   let interestForPeriod = 0;
+  let totalInterest = 0;
   while (remaining > 0) {
     const dailyInterest = remaining * rate / 100 / 365;
     interestForPeriod += dailyInterest;
     if (d % daysPerPayment == 0) remaining -= repayment;
     if (d % daysPerInterestCharge == 0) {
       remaining += interestForPeriod;
+      totalInterest += interestForPeriod;
       interestForPeriod = 0;
     }
     // Check for insufficient repayment, so we don't blow up.
@@ -25,7 +27,7 @@ function calculateLoanPeriod(amount, rate, repayment, daysPerPayment = 14) {
     }
     d++;
   }
-  return d;
+  return {'days': d, 'interest': Math.floor(totalInterest)};
 }
 
 window.onload = function() {
@@ -38,12 +40,15 @@ window.onload = function() {
     const repayment = form.elements['repayment'].value;
     const cadence = form.elements['cadence'].value;
     let daysPerPayment = cadence == 'fortnightly' ? 14 : 30;
-    const loanPeriodInDays = calculateLoanPeriod(
+    const loanObject = calculateLoanPeriod(
         amount, rate, repayment, daysPerPayment = daysPerPayment);
+    const loanPeriodInDays = loanObject.days;
+    const totalInterest = loanObject.interest;
     if (loanPeriodInDays) {
       const loanPeriodInYears = Math.floor(loanPeriodInDays / 365);
       const extraMonths = Math.floor(loanPeriodInDays % 365 / 30);
-      term = `${loanPeriodInYears} years and ${extraMonths} months.`;
+      term = `${loanPeriodInYears} years and ${extraMonths} months.
+      Total interest paid: $${totalInterest}`;
     } else {
       term = `The repayment is too small to pay off this loan!`;
     }
