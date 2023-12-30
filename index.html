@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 </head>
 <title>Mortgage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <noscript>This page requires JavaScript to function, sorry!</noscript>
 <script src="script.js"></script>
 <style>
     body{
         background-color: aquamarine;
     }
+    .main {
+        width: 100%;
+    }
     form {
         text-align: right;
-        width: 40%;
     }
-
+    #fields {
+        width: fit-content
+    }
     #results {
         text-align: left;
         color:blueviolet;
@@ -20,8 +25,9 @@
 </head>
 
 <body>
+    <div class="main">
     <form id="calculator">
-        <fieldset>
+        <fieldset id="fields">
             <legend>Mortgage Term Calculator</legend>
             <label for="amount">Loan Amount ($):</label>
             <input type="number" value="130000" min="0" step="0.01" id="amount"><br>
@@ -39,6 +45,7 @@
     <div id="results">
         <label for="term">Term:</label>
         <output id="term"></output>
+    </div>
     </div>
 </body>
 
